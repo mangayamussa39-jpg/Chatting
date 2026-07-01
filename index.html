@@ -1,497 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Mussa Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
-    
-    <style>
-        :root {
-            --bg: #000000;
-            --glass: rgba(22, 22, 23, 0.85);
-            --ios-blue: #007AFF;
-            --ios-gray: #262629;
-            --text-main: #FFFFFF;
-            --text-sub: #8E8E93;
-            --font-stack: 'Inter', -apple-system, system-ui, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" id="theme-color-meta" content="#f2f2fe">
+<title>Responsive Navbar</title> 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<!-- Added &display=block to the font URL to ensure stable font loading -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0&display=block" rel="stylesheet" />
 
-        body, html {
-            margin: 0; padding: 0;
-            height: 100%;
-            font-family: var(--font-stack);
-            background-color: var(--bg);
-            color: var(--text-main);
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+<style>
+:root {
+    --primary: #fff;
+    --text: #444;
+    --secondary: #ececfe;
+    --browser-bg: #fff;
+    --active-color: #0b57d0; 
+    --active-pill: #a6d4ef;
+}
 
-        /* LOGIN OVERLAY */
-        #loginOverlay {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-        }
+html.dark-mode {
+    --primary: #111111;
+    --text: #ccc;
+    --secondary: #1f1f1f;
+    --browser-bg: #111111;
+    --active-color: #66a7d8; 
+    --active-pill: #004a77;
+}
 
-        .login-card {
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;    
+    -webkit-user-select: none;
+    font-family: 'poppins';    
+}
 
-        .login-card h2 { 
-            font-size: 32px; 
-            margin-bottom: 24px; 
-            font-weight: 700; 
-            letter-spacing: -0.5px;
-        }
-        
-        #usernameInput {
-            width: 100%;
-            padding: 18px;
-            border-radius: 14px;
-            border: 1px solid #333;
-            background: #1c1c1e;
-            color: white;
-            font-size: 17px;
-            margin-bottom: 16px;
-            outline: none;
-            box-sizing: border-box;
-            font-family: var(--font-stack);
-        }
+body {
+    background-color: var(--browser-bg);
+    font-family: sans-serif;    
+    width: 100%;
+    overflow: hidden; 
+    color: var(--text);
+}
 
-        #startBtn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            border: none;
-            background: var(--ios-blue);
-            color: white;
-            font-weight: 600;
-            font-size: 17px;
-            cursor: pointer;
-            font-family: var(--font-stack);
-        }
+.page-wrapper {
+    display: flex;
+    flex-direction: column; 
+    height: 100dvh;
+    width: 100%;
+    background-color: var(--primary);
+}
 
-        /* MAIN CHAT UI */
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            /* 100dvh ensures it fits exactly within the visible screen on mobile */
-            height: 100dvh; 
-            position: relative;
-        }
+.main {
+    flex: 1; 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+}
 
-        header {
-            padding: 55px 20px 15px;
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 0.5px solid #2c2c2e;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-        }
+.header-bar{
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    z-index: 999;
+}
 
-        header h1 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.header-left,
+.header-center,
+.header-right{
+    flex: auto;
+    display: flex;
+    align-items: center;
+    width: 12%;
+}
+.header-logo{
+    height: 0px;   
+    width: auto;
+    flex-shrink: 0;
+}
+.header-center{
+    justify-content: center;
+    width: 70%;
+    display: flex;
+    justify-content: flex-start;
+}
 
-        .user-count {
-            background: rgba(0, 122, 255, 0.15);
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: #409CFF;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+.header-right{
+    justify-content: flex-end;
+    width: 18%;
+    gap: 10px;
+}
 
-        #chatBox {
-            flex: 1;
-            overflow-y: auto;
-            padding: 110px 20px 20px; /* Top padding clears the header */
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            scroll-behavior: smooth;
-        }
+.action-btn {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 50px;
+    color: var(--text);
+    float: right;
+    background: var(--secondary);
+}
 
-        /* MESSAGE BUBBLES */
-        .msg-wrapper {
-            display: flex;
-            flex-direction: column;
-            max-width: 78%;
-        }
+.action-btn .material-symbols-rounded {
+    font-variation-settings: 'FILL' 0;
+    font-size: 24px;
+}
 
-        .msg-wrapper.me {
-            align-self: flex-end;
-            align-items: flex-end;
-        }
+.navbar {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;    
+    padding-top: 10px;
+    padding-bottom: 5px;
+    background: var(--primary);
+    order: 1;
+    flex-shrink: 0; 
+    z-index: 999;
+    border-top: 1px var(--secondary) solid;
+    border-right: none;
+}
 
-        .msg-wrapper.others {
-            align-self: flex-start;
-            align-items: flex-start;
-        }
+.nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    color: var(--text);
+}
 
-        .msg {
-            padding: 10px 18px;
-            border-radius: 22px;
-            font-size: 16px;
-            font-weight: 400;
-            line-height: 1.35;
-            position: relative;
-            word-wrap: break-word;
-            animation: bubblePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
-        }
+.nav .icon-container {
+    padding-top: 3px;
+    width: 50px; 
+    height: 28px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 24px;
+    background-color: transparent;    
+}
 
-        .msg.sent {
-            background-color: var(--ios-blue);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
+.nav.active .icon-container {
+    background-color: var(--active-pill);
+}
 
-        .msg.received {
-            background-color: var(--ios-gray);
-            color: white;
-            border-bottom-left-radius: 5px;
-        }
+.nav .material-symbols-rounded {
+    font-size: 24px; 
+    font-variation-settings: 'FILL' 0; 
+    transition: font-variation-settings 0.3s ease;
+    font-weight: 500;
+}
 
-        .sender-name {
-            font-size: 12px;
-            color: var(--text-sub);
-            margin-bottom: 4px;
-            margin-left: 14px;
-            font-weight: 500;
-        }
+.nav.active {
+    color: var(--active-color);    
+}
 
-        .me .sender-name { display: none; }
+.nav.active .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1; 
+    animation: subtle-bounce 0.4s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+    font-weight: 700;
+}
 
-        /* TYPING INDICATOR */
-        .typing-bubble {
-            background: var(--ios-gray);
-            padding: 10px 16px;
-            border-radius: 22px;
-            border-bottom-left-radius: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 20px;
-            margin-bottom: 5px;
-            animation: fadeIn 0.3s ease;
-        }
+.nav-name{
+    font-weight: 500;
+    font-size: 14px;
+}
 
-        .dot {
-            width: 7px;
-            height: 7px;
-            background: #8e8e93;
-            border-radius: 50%;
-            animation: typingBounce 1.4s infinite ease-in-out both;
-        }
+@keyframes subtle-bounce {
+    0% { transform: scale(1, 1); }
+    30% { transform: scale(1.15, 0.95); } 
+    60% { transform: scale(0.9, 1.1); }   
+    80% { transform: scale(1.05, 0.95); } 
+    100% { transform: scale(1, 1); }
+}
 
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
+.search-box{
+  display:flex;
+  align-items:center;
+  background: var(--secondary);
+  height:60px;
+  width: 92%;
+  border-radius:30px;
+  padding:0 12px;
+  margin-right: auto;
+  margin: 0px 20px;
+}
 
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1.1); opacity: 1; }
-        }
+.search-icon{
+  font-size: 24px;
+  padding: 5px;
+  color: var(--text);
+  margin-right:10px;
+  font-weight: 500;
+  flex-shrink:0;
+}
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.search-box input{
+  flex:1;
+  min-height:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  color: var(--text);
+  font-size:16px;
+}
 
-        /* INPUT AREA */
-        .input-bar-container {
-            background: var(--bg);
-            /* Handle iPhone X+ safe areas */
-            padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 20;
-        }
+.search-box button{
+  border:none;
+  background:transparent;
+  font-size:24px;
+  cursor:pointer;
+  margin-left:8px;
+  display:none;
+  color: var(--text);
+  flex-shrink:0;
+  padding: 5px;
+  padding-right: 10px;
+}
+.page{
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;    
+    align-items:center;
+}
+.hero{
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    height: 600px;
+    justify-content:center;
+    align-items:center;
+}
+.headline{
+    width:80%;
+    height:40%;
+    order: 1;
+}
+.hero-image{
+    width:100%;
+    height:100%;
+    background: no-repeat center url('hero.png');
+    background-size: cover;
+    border-radius: 30px;
+}
 
-        .input-bar {
-            background: #1c1c1e;
-            border: 1px solid #333;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            padding: 4px 6px 4px 16px;
-            gap: 8px;
-            width: 100%; /* Fix width issue */
-            box-sizing: border-box;
-        }
-
-        #messageInput {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 10px 0;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            font-family: var(--font-stack);
-            min-width: 0;
-        }
-
-        #sendBtn {
-            background: var(--ios-blue);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        
-        #sendBtn .material-symbols-rounded {
-            font-size: 20px;
-        }
-
-        #sendBtn:active { transform: scale(0.85); opacity: 0.8; }
-
-        @keyframes bubblePop {
-            from { opacity: 0; transform: scale(0.85) translateY(15px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-    </style>
+@media (min-width: 600px) {
+    html {
+        background-color: var(--primary);
+    }
+    .headline{
+        order: 0;
+    }
+    .page-wrapper {
+        flex-direction: row; 
+    }
+    .hero{
+        height: 340px;      
+        flex-direction: row;
+    }
+    .header-center{
+        justify-content: flex-start;
+    }
+    .header-left,
+    .header-center,
+    .header-right{    
+        width: 7%;
+    }
+    .header-center{
+        width: 73%;    
+    }
+    .header-right{    
+        width: 18%;
+    }
+    .search-box{
+        width: 50%;
+        margin-right: auto;
+    }
+    .navbar {
+        width: 100px;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        order: 0;
+        border-top: none;
+        border-right: 1px var(--secondary) solid;
+    }
+    .nav {
+        flex: none;
+    }
+}
+</style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-card">
-            <h2>Mussa Chat</h2>
-            <input type="text" id="usernameInput" placeholder="Name" maxlength="15">
-            <button id="startBtn">Continue</button>
+<div class="page-wrapper">
+
+    <!-- THE NAVBAR -->
+    <nav class="navbar">
+        <div class="nav active">
+            <!-- Used code point &#xe88a; instead of 'home' -->
+            <div class="icon-container"><span class="material-symbols-rounded">&#xe88a;</span></div>
+            <span class="nav-name">Home</span>
         </div>
-    </div>
-
-    <div class="app-container">
-        <header>
-            <h1 id="displayUser">Mussa chat</h1>
-            <div class="user-count"><span id="count">0</span> Online</div>
-        </header>
-
-        <div id="chatBox"></div>
-
-        <div id="typingContainer"></div>
-
-        <div class="input-bar-container">
-            <div class="input-bar">
-                <input type="text" id="messageInput" placeholder="iMessage" autocomplete="off">
-                <button id="sendBtn">
-                    <span class="material-symbols-rounded">arrow_upward</span>
-                </button>
+        <div class="nav">
+            <!-- Used code point &#xe871; instead of 'dashboard' -->
+            <div class="icon-container"><span class="material-symbols-rounded">&#xe871;</span></div>
+            <span class="nav-name">Category</span>
+        </div>
+        <div class="nav">
+            <!-- Used code point &#xe8d1; instead of 'store' -->
+            <div class="icon-container"><span class="material-symbols-rounded">&#xe8d1;</span></div>
+            <span class="nav-name">Shop</span>
+        </div>
+        <div class="nav">
+            <!-- Used code point &#xe8cc; instead of 'shopping_cart' -->
+            <div class="icon-container"><span class="material-symbols-rounded">&#xe8cc;</span></div>
+            <span class="nav-name">Cart</span>
+        </div>
+        <div class="nav">
+            <!-- Used code point &#xe5d3; instead of 'more_horiz' -->
+            <div class="icon-container"><span class="material-symbols-rounded">&#xe5d3;</span></div>
+            <span class="nav-name">More</span>
+        </div>
+    </nav>
+    
+    <!-- THE MAIN -->
+    <div class="main">        
+        <header class="header-bar">
+        <div class="header-left">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/060/687/101/small/impressive-victorian-abstract-logo-formed-by-two-intersecting-lines-crisp-edges-minimal-flat-color-with-scalable-design-4k-png.png" alt="Logo" class="header-logo">
+        </div>        
+        <div class="header-center">
+            <h2>Mussa Furnitures</h2>
+        </div>
+        <div class="header-right">
+            <div id="theme-switch" class="action-btn">
+                <!-- Used code point &#xe518; instead of 'light_mode' -->
+                <span class="material-symbols-rounded" id="theme-icon">&#xe518;</span>
+            </div>
+            <div id="language-translation" class="action-btn">Swahili
+                <!-- Used code point &#xe927; instead of 'g_translate' -->
+                <span class="material-symbols-rounded">&#xe927;</span>
             </div>
         </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-        import { 
-            getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
-            serverTimestamp, doc, setDoc, deleteDoc, updateDoc
-        } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDDTv8_vX02oji8V9QTuq78P9idAcrDPKI",
-            authDomain: "name-and-password-8df7d.firebaseapp.com",
-            projectId: "name-and-password-8df7d",
-            storageBucket: "name-and-password-8df7d.firebasestorage.app",
-            messagingSenderId: "273957748862",
-            appId: "1:273957748862:web:f7f173d907e055e3e8182f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        </header>
         
-        let currentUser = "";
-        let typingTimeout = null;
-        let onlineUsersCache = {}; // Cache to store user data for local filtering
+        <div class="search-box">
+            <!-- Used code point &#xe8b6; instead of 'search' -->
+            <span class="material-symbols-rounded search-icon">&#xe8b6;</span>                    
+            <input id="search" type="text" placeholder="Search for Furniture" />
+            <button class="clear" id="clearBtn">×</button>              
+        </div>
+    
+        <div class="page">
+            <section class="hero">
+                <div class="headline">
+                    <h1>Welcome my friend</h1>
+                    <p>Anything stupid</p>
+                </div>
+                <div class="hero-image"></div>
+            </section>
+        </div> 
+    </div>
+</div>
+    
+<script src="screen.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const htmlElement = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
 
-        const loginOverlay = document.getElementById('loginOverlay');
-        const usernameInput = document.getElementById('usernameInput');
-        const chatBox = document.getElementById('chatBox');
-        const messageInput = document.getElementById('messageInput');
-        const typingContainer = document.getElementById('typingContainer');
-        const countDisplay = document.getElementById('count');
+    // Theme Toggle
+    document.getElementById('theme-switch').addEventListener('click', () => {
+        htmlElement.classList.toggle('dark-mode');
+        const isDark = htmlElement.classList.contains('dark-mode');
+        // Updated to use innerHTML so the HTML entity codes are rendered as icons, not raw text
+        themeIcon.innerHTML = isDark ? '&#xe51c;' : '&#xe518;';
+    });
 
-        // LOGIN HANDLER
-        document.getElementById('startBtn').onclick = async () => {
-            const val = usernameInput.value.trim();
-            if (val !== "") {
-                currentUser = val;
-                loginOverlay.style.transform = "translateY(-100%)";
-                
-                // Register user immediately
-                const userRef = doc(db, "onlineUsers", currentUser);
-                await setDoc(userRef, { name: currentUser, lastActive: Date.now() });
-
-                // Heartbeat: Update "lastActive" every 10 seconds
-                setInterval(async () => {
-                    await updateDoc(userRef, { lastActive: Date.now() });
-                }, 10000);
-
-                // Cleanup on close
-                window.addEventListener('beforeunload', () => {
-                    deleteDoc(userRef);
-                    deleteDoc(doc(db, "typingStatus", currentUser));
-                });
-
-                initializeChat();
-            }
-        };
-
-        function initializeChat() {
-            // 1. ONLINE USERS LISTENER
-            // This pulls data from DB, but we do the counting logic in a separate timer
-            onSnapshot(collection(db, "onlineUsers"), (snapshot) => {
-                const tempCache = {};
-                snapshot.forEach(docSnap => {
-                    tempCache[docSnap.id] = docSnap.data();
-                });
-                onlineUsersCache = tempCache;
-                calculateActiveUsers(); // Trigger immediate update
-            });
-
-            // 2. LOCAL TIMER FOR USER COUNT
-            // This runs every second to filter out users who stopped sending heartbeats
-            // This ensures the count drops even if the database doesn't trigger an event
-            setInterval(() => {
-                calculateActiveUsers();
-            }, 1000);
-
-            // 3. MESSAGES LISTENER
-            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-            onSnapshot(q, (snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added") appendMessage(change.doc.data());
-                });
-            });
-
-            // 4. TYPING STATUS LISTENER
-            const typingQuery = query(collection(db, "typingStatus"));
-            onSnapshot(typingQuery, (snapshot) => {
-                const typers = [];
-                const now = Date.now();
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    // Only show typing if updated in last 5 seconds
-                    if (doc.id !== currentUser && (now - data.timestamp) < 5000) {
-                        typers.push(data.user);
-                    }
-                });
-                renderTypingIndicator(typers);
-            });
-        }
-
-        // Logic to count ONLY recently active users
-        function calculateActiveUsers() {
-            const now = Date.now();
-            let activeCount = 0;
-            
-            Object.keys(onlineUsersCache).forEach(userId => {
-                const userData = onlineUsersCache[userId];
-                if (userData.lastActive) {
-                    const diff = now - userData.lastActive;
-                    
-                    // Consider online if heartbeat was within last 30 seconds
-                    if (diff < 30000) {
-                        activeCount++;
-                    } 
-                    // Optional: Clean up very old users (over 60s) from DB to keep it tidy
-                    // We only do this check occasionally to save writes
-                    else if (diff > 60000 && Math.random() < 0.1) { 
-                        deleteDoc(doc(db, "onlineUsers", userId)).catch(()=>{});
-                    }
-                }
-            });
-            
-            countDisplay.innerText = activeCount;
-        }
-
-        function appendMessage(data) {
-            const isMe = data.user === currentUser;
-            const wrapper = document.createElement('div');
-            wrapper.className = `msg-wrapper ${isMe ? 'me' : 'others'}`;
-            
-            let htmlContent = isMe ? '' : `<span class="sender-name">${data.user}</span>`;
-            htmlContent += `<div class="msg ${isMe ? 'sent' : 'received'}">${data.text}</div>`;
-            
-            wrapper.innerHTML = htmlContent;
-            chatBox.appendChild(wrapper);
-            // Small delay to ensure render before scrolling
-            setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 50);
-        }
-
-        async function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
-            
-            // Clear input immediately for better UX
-            const msgToSend = text;
-            messageInput.value = "";
-            stopTyping();
-
-            await addDoc(collection(db, "messages"), {
-                text: msgToSend,
-                user: currentUser,
-                createdAt: serverTimestamp()
-            });
-        }
-
-        document.getElementById('sendBtn').onclick = sendMessage;
-        messageInput.onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
-
-        messageInput.addEventListener('input', () => {
-            if (messageInput.value.length > 0) {
-                updateTyping(true);
-                if (typingTimeout) clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => updateTyping(false), 2000);
-            } else {
-                updateTyping(false);
-            }
+    // Nav Active Toggle with Animation Reset
+    const navItems = document.querySelectorAll('.nav');
+    navItems.forEach(nav => {
+        nav.addEventListener('click', () => {
+            document.querySelector('.nav.active').classList.remove('active');
+            nav.classList.remove('active');
+            void nav.offsetWidth; 
+            nav.classList.add('active');
         });
+    });
+});
+</script>
+<script>
+const input = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
 
-        async function updateTyping(isTyping) {
-            const typingRef = doc(db, "typingStatus", currentUser);
-            if (isTyping) await setDoc(typingRef, { user: currentUser, timestamp: Date.now() });
-            else stopTyping();
-        }
+input.addEventListener("input", () => {
+  clearBtn.style.display = input.value.length ? "block" : "none";
+});
 
-        async function stopTyping() {
-            try { await deleteDoc(doc(db, "typingStatus", currentUser)); } catch (e) {}
-        }
-
-        function renderTypingIndicator(typers) {
-            if (typers.length > 0) {
-                let text = typers.length === 1 ? `${typers[0]} is typing` : "Multiple people typing";
-                typingContainer.innerHTML = `
-                    <div class="typing-bubble">
-                        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-                    </div>
-                    <div style="font-size: 11px; color: #8e8e93; margin-left: 24px; margin-bottom: 12px; font-weight: 500;">${text}</div>
-                `;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } else {
-                typingContainer.innerHTML = "";
-            }
-        }
-    </script>
+clearBtn.addEventListener("click", () => {
+  input.value = "";
+  clearBtn.style.display = "none";
+  input.focus();
+});
+</script>
 </body>
 </html>
